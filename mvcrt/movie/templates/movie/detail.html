@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<title>FreshRaspberry - Movie Lists</title>
+<style>
+.fontcolor--white{
+    color:white;
+}
+.score-circle{
+    width:24px;
+    height:24px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: red;
+    margin: 1px 3px 1px 0px;
+}
+.movie-list__title{
+    max-width:230px;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+</style>
+</head>
+<body>
+<!-- 상단 네비게이션 바 시작 -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" style="margin-bottom:50px; height:50px;">
+    <div class="container" style="max-width:800px;">
+        <a class="navbar-brand" href="/">FreshRaspberry</a>
+        <div class="navbar navbar-expand">  
+            <div class="links">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/list">Browse Movie</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="/write">Write</a></li>
+                </ul>
+            </div>
+            <div class="md-form form-group" style="margin-left:20px;">
+                <input class="navbar-text" style="color:black; height:30px; margin-top: 17px;"  id="search" placeholder="Search" autocomplete="off">
+            </div>
+            <ul class="navbar-nav nav-flex-icons fontcolor--white" style="margin-left:20px;">
+                <li class="nav-item">☆</li>
+                <li class="nav-item">★</li>
+            <ul class="navbar-nav fontcolor--white" style="margin-left:20px;">
+                <li class="nav-item">Login</li>
+                <li class="nav-item" style="margin-left:20px;">Sign Up</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- 상단 네비게이션 바 끝-->
+
+
+<!-- 메인 컨테이너 시작-->
+<div class="container" style="max-width:800px;">
+    <div id="movie" class="container">
+        <form id="movieForm" method="post" action=/movie>
+            <input type="hidden" name="movieId" value="${movie.movieId}">
+            <div id="movieHead">
+                score: <span id="score">${movie.scoreAverage}</span><br/><br>
+                title: <span id="title">${movie.title}</span>
+            </div>
+            <div id="movieBody">
+                <br>
+                Genre: <span id="genre">${movie.genre}</span><br/><br>
+                Starring: <span id="starring">${movie.starring}</span><br/><br>
+                Summary: <span id="summary">${movie.summary}</span><br/><br>
+                Director: <span id="director">${movie.director}</span><br/><br>
+                Release date: <span id="releaseDate">${movie.releaseDate}</span><br/><br>
+                Runtime: <span id="runtime">${movie.runtime}</span><br>
+            </div>
+            <button type="button" onclick="edit()">Edit</button>
+            <button type="button" onclick="deleteMovie()">Delete</button>
+            <button id="update" style="visibility: hidden;">Update</button>
+        </form>
+    </div>
+</div>
+
+<script>
+var edit = function(){
+    var headHtml = `score: <span id="score">${movie.scoreAverage}</span><br/><br>
+            title: <span id="title"><input name="title" value="${movie.title}"</span>`;
+    var bodyHtml =`<br>
+            Genre: <span id="genre"><input name="genre" value="${movie.genre}"></span><br/><br>
+            Starring: <span id="starring"><input name="starring" value="${movie.starring}"></span><br/><br>
+            Summary: <span id="summary"><input name="summary" value="${movie.summary}"></span><br/><br>
+            Director: <span id="director"><input name="director" value="${movie.director}"></span><br/><br>
+            Release date: <span id="releaseDate"><input name="releaseDate" id="datePicker" value="${movie.releaseDate}"></span><br/><br>
+            Runtime: <span id="runtime"><input name=""runtime" value="${movie.runtime}"></span><br>`;
+    
+    $('#movieHead').html(headHtml);
+    $('#movieBody').html(bodyHtml);
+    $('#update').css('visibility', 'visible');
+    $('#datePicker').datepicker({
+		changeYear: true,
+		changeMonth: true,
+	  	dateFormat: "mm/dd/yy",
+	  	showOn: "both",
+		});
+}
+var deleteMovie = function(){
+    if(confirm("sure?")){  
+        $('#movieForm').attr('action', '/movie.delete');
+        $('#movieForm').submit();
+    }
+}
+$(document).ready(function(){
+})  
+</script>
+</body>
