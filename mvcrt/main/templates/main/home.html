@@ -36,7 +36,7 @@
             {% for movie in available_now %}
                 <div class="row">
                     <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
-                    <a class= movie-list__title href="/movie/detail/{{ movie.id }}">{{ movie.title }}<br></a>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
                 </div>
             {% endfor %}
         </div>
@@ -47,7 +47,7 @@
             {% for movie in upcoming_release %}
                 <div class="row">
                     <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
-                    <a class= movie-list__title href="/movie/detail/{{ movie.id }}">{{ movie.title }}<br></a>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
                 </div>
             {% endfor %}
         </div>
@@ -58,7 +58,7 @@
             {% for movie in recently_popular %}
                 <div class="row">
                     <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
-                    <a class= movie-list__title href="/movie/detail/{{ movie.id }}">{{ movie.title }}<br></a>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
                 </div>
             {% endfor %}
         </div>
