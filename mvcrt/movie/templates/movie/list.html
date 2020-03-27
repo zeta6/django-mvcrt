@@ -1,86 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+{% extends 'main/base.html' %}
 
-<title>FreshRaspberry - Movie Lists</title>
-<style>
-a{
-    text-decoration: none;
-    color:black;
-}
-.fontcolor--white{
-    color:white;
-}
-.score-circle{
-    width:24px;
-    height:24px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: red;
-    margin: 1px 3px 1px 0px;
-}
-.movie-list__title{
-    max-width:230px;
-    white-space: nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.search-result__container{
-    display:none;
-    position:absolute;
-    background-color:white;
-    color:black;
-    z-index: 3;
-}
-.search-result{
-    display:block;
-    color:black;
-}
-</style>
-</head>
-<body>
-<!-- 상단 네비게이션 바 시작 -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" style="margin-bottom:50px; height:50px;">
-    <div class="container" style="max-width:800px;">
-        <a class="navbar-brand" href="/">FreshRaspberry</a>
-        <div class="navbar navbar-expand">  
-            <div class="links">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="/list">Browse Movie</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="/write">Write</a></li>
-                </ul>
-            </div>
-            <div class="md-form form-group" style="margin-left:20px;">
-                <input class="navbar-text" style="color:black; height:30px; margin-top: 17px;"  id="search" placeholder="Search" autocomplete="off">
-                <div class="search-result__container" id="searchResultContainer">fafsaf<br>effew<br>fsafsf</div>              
-            </div>
-            <ul class="navbar-nav nav-flex-icons fontcolor--white" style="margin-left:20px;">
-                <li class="nav-item">☆</li>
-                <li class="nav-item">★</li>
-            <ul class="navbar-nav fontcolor--white" style="margin-left:20px;">
-                <c:if test="${member == null}">
-                <li class="nav-item" onclick="location.href='/login'">Login</li>
-                <li class="nav-item" style="margin-left:20px;" onclick="location.href='/signUp'">Sign Up</li>
-                </c:if>
-                <c:if test="${member != null}">
-                <li class="nav-item" onclick="location.href='/logout'">Logout</li>    
-                </c:if>
-            </ul>
-        </div>
-    </div>
-</nav>
-<!-- 상단 네비게이션 바 끝-->
+{% block content %}
 
-<!-- 메인 컨테이너 시작-->
-<div class="container" style="max-width:800px;">
     <!--중앙 컨테이너 셀렉트박스, 무비리스트테이블, 페이지네이션 -->
     <div class="container">
         <!-- 검색폼 시작-->
@@ -107,7 +28,7 @@ a{
                 </div>
                 <div class="col-3">
                     <select id="sort" name="sort" class="col-11 condition">
-                        <option value="releaseDate">Release Date</option>
+                        <option value="">Release Date</option>
                         <option value="A_Z">A-Z</option>
                         <option value="Z_A">Z_A</option>
                         <option value="score">Score</option>
@@ -115,7 +36,7 @@ a{
                 </div>
                 <div class="col-3">
                     <input id="title" name="title" class="col-12" placeholder="title">
-                    <input id="startNum" name="startNum" value="0" type="hidden">
+                    <input id="page" name="page" value="1" type="hidden">
                 </div>
             </div>
             <!--셀렉트박스 끝-->
@@ -128,15 +49,16 @@ a{
                 <tr>
 					<th>Number</th><th>Score</th><th style="width: 30%;">Title</th><th>Genre</th><th>Release Date</th>
                 </tr>
-            <c:set var="movieNum" value="${currentPage*10+1}" />
-            <c:forEach items="${movies}" var="movie">
+            {% load custom_tags %}
+            {% number_plus_one movie_number as movieNum %}
+            {% for movie in movie_list %}
                 <tr>
-                    <th><c:out value="${movieNum}" /></th><th><fmt:formatNumber value="${movie.scoreAverage}" pattern=".0"/></th>
-                    <th><a href="/movie?movieId=${movie.movieId}">${movie.title}</a></th>
-                    <th>${movie.genre}</th><th>${movie.releaseDate}</th>
+                    <th>{{ movieNum }}</th><th>{{ movie.average_score|floatformat:'1' }}</th>
+                        <th><a href="{% url 'movie:detail' movie.id %}">{{ movie.title }}</a></th>
+                    <th>{{ movie.genre }}</th><th>{{ movie.release_date }}</th>
                 </tr>
-                <c:set var="movieNum" value="${movieNum+1}" />
-            </c:forEach>
+            {% number_plus_one movieNum as movieNum %}
+            {% endfor %}
             </table>
         </div>
         <!--무비리스트 테이블 끝-->
@@ -144,25 +66,25 @@ a{
         <!--페이지네이션 시작-->
         <div class="row" style="justify-content: center;  margin-top: 30px;">
             <ul id="pages" class="pagination pagination-sm">
-                <c:if test="${firstPage}">
+                {% if first_page %}
                     <li class="page-item">
-                        <a class="page-link" href="javascript:getList(0)">1</a>
+                        <a class="page-link" href="javascript:getList({{first_page}})">{{ first_page }}</a>
                     </li>
                     <c:if test="${startPage>2}">
                         <li class="page-item"><span class="page-link">...</span></li>
                     </c:if>
-                </c:if>
-                <c:forEach begin="${startPage}" end="${endPage}" var="page">
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:getList(${(page-1)*10})">${page}</a>
-                    </li>
-                </c:forEach>
-                <c:if test="${pageExtension}">
+                {% endif %}
+                {% for page in pages %}
+                <li class="page-item">
+                    <a class="page-link" href="javascript:getList({{ page }})">{{ page }}</a>
+                </li>
+                {% endfor %}
+                {% if last_page %}
                     <li class="page-item"><span class="page-link">...</span></li>
                     <li class="page-item">
-                        <a class="page-link" href="javascript:getList(${(lastPage-1)*10})">${lastPage}</a>
+                        <a class="page-link" href="javascript:getList(${(lastPage-1)*10})">{{ last_page }}</a>
                     </li>
-                </c:if>
+                {% endif %}
             </ul>
         </div>
         <!--페이지네이션 끝-->
@@ -201,20 +123,20 @@ var search = function(oldKeyword, newKeyword){
     }
 }
 var getList = function(page){
-    $("#startNum").val(page);
+    $("#page").val(page);
     $("#conditions").submit();
 }
 var getCsv = function(){
-    $("#conditions").attr("action", "/export-movies");
+    $("#conditions").attr("action", "list/export_csv");
     $("#conditions").submit();
-    $("#conditions").attr("action", "/list");
+    $("#conditions").attr("action", "list");
 }
     
 $(document).ready(function(){
-    $("#genre option[value='${genre}']").attr("selected", "selected");
-	$("#timeFrame option[value='${timeFrame}']").attr("selected", "selected");
-	$("#sort option[value='${sort}']").attr("selected", "selected");
-    $("#title").val("${title}");
+    $("#genre option[value='{{ genre}}']").attr("selected", "selected");
+	$("#timeFrame option[value='{{ timeFrame }}']").attr("selected", "selected");
+	$("#sort option[value='{{ sort }}']").attr("selected", "selected");
+    $("#title").val("{{ title }}");
         
     var oldKeyword = "";
     
@@ -230,4 +152,4 @@ $(document).ready(function(){
         
 })
 </script>
-</body>
+{% endblock %}

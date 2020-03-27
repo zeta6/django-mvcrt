@@ -1,0 +1,99 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <!-- 상단 광고 시작 -->
+    <!-- <div class="row">
+    </div> -->
+    <!-- 상단 광고 끝-->
+
+    <!-- 포스터 row 시작-->
+    <div class="row">
+        <c:forEach items="1,2,3,4" var = "i" begin="0" end="3">
+            <div class="col-3">
+                <div class="card">
+                    <!-- <div class="card-header">
+                    </div> -->
+                    <img src="\resources\jojo.jpg" alt="" width="169px;" />
+                    <div class="card-body">
+                        <p><c:out value="${i}"></c:out></p>
+                        <!-- <h5 class="card-title">
+                        </h5> -->
+                        <!-- <p class="card-text"></p>
+                        <a href="#" class="btn btn-primary">More</a> -->
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+    </div>
+    <!--  포스터 row 끝-->
+
+    <!-- 배너 게시판 row 시작 -->
+    <div class="row" style="margin-bottom: 30px;">
+        <div class="col-4">
+            <div class="row">
+                <h4>AVAILABLE NOW</h4>
+            </div>
+            {% for movie in available_now %}
+                <div class="row">
+                    <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <h4>UPCOMING RELEASES</h4>
+            </div>
+            {% for movie in upcoming_release %}
+                <div class="row">
+                    <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <h4>GOOD SCORE</h4>
+            </div>
+            {% for movie in recently_popular %}
+                <div class="row">
+                    <div class="score-circle">{{ movie.average_score|floatformat:'1' }}</div>
+                    <a class= movie-list__title href="{% url 'movie:detail' movie.id %}">{{ movie.title }}<br></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- 배너 게시판 row 끝 -->
+
+    <!-- 중단 광고 시작 -->
+    <!-- <div class="row">
+    </div> -->
+    <!-- 중단 광고 끝-->
+
+    <!-- hall of frame row 시작-->
+    <div class="row">
+        <c:forEach var="no" begin="1" end="12">
+            <div class="col-4">
+                <c:out value="${no}" />
+            </div>
+        </c:forEach>
+    </div>
+    <!-- hall of frame row 끝-->
+
+    <!-- 하단 광고 시작 -->
+    <!-- <div class="row">
+    </div> -->
+    <!-- 하단 광고 끝-->
+
+    <!-- headlines 시작-->
+    <div class="row">
+        <c:forEach var="no" begin="1" end="6">
+            <div class="col-12">
+                <c:out value="${no}" />
+            </div>
+        </c:forEach>
+    </div>
+    <!-- headlines 끝-->
+</div>
+<!-- 메인 컨테이너 끝-->
+{% endblock %}
