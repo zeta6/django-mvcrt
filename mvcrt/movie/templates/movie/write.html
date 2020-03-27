@@ -2,25 +2,18 @@
 
 {% block content %}
     <div id="movie" class="container">
-        <form id="movieForm" method="post" action='{% url "movie:edit" movie.id %}'>
+        <form method="post" action="{% url 'movie:post_write' %}">
             {% csrf_token %}
-            <input type="hidden" name="movieId" value="{{ movie.id }}">
-            <div id="movieHead">
-                score: <span id="score">{{ movie.average_score }}</span><br/><br>
-                title: <span id="title">{{ movie.title }}</span>
-            </div>
-            <div id="movieBody">
-                <br>
-                Genre: <span id="genre">{{ movie.genre }}</span><br/><br>
-                Starring: <span id="starring">{{ movie.starring }}</span><br/><br>
-                Summary: <span id="summary">{{ movie.summary }}</span><br/><br>
-                Director: <span id="director">{{ movie.director }}</span><br/><br>
-                Release date: <span id="releaseDate">{{ movie.release_date }}</span><br/><br>
-                Runtime: <span id="runtime">{{ movie.runtime }}</span><br>
-            </div>
-            <button type="button" onclick="edit()">Edit</button>
-            <button type="button" onclick="deleteMovie()">Delete</button>
-            <button id="submitButton" style="visibility: hidden;">submit</button>
+            <table>
+                <tr><th><label>Title</label></th><th><input name="title"><br></th></tr>
+                <tr><th><label>Genre</label></th><th><input name="genre"><br></th></tr>
+                <tr><th><label>Starring</label></th><th><input name="starring"><br></th></tr>
+                <tr><th><label>Summary</label></th><th><input name="summary"><br></th></tr>
+                <tr><th><label>Director</label></th><th><input name="director"><br></th></tr>
+                <tr><th><label>Release date</label></th><th><input id="datePicker" name="releaseDate"><br></th></tr>
+                <tr><th><label>Runtime</label></th><th><input name="runtime"><br></th></tr>
+            </table>
+            <input type="submit" value="submit">
         </form>
     </div>
 
@@ -48,7 +41,6 @@ var edit = function(){
 }
 var deleteMovie = function(){
     if(confirm("sure?")){  
-        $('#movieForm').attr('action', '{% url "movie:delete" movie.id %}');
         $('#movieForm').submit();
     }
 }
