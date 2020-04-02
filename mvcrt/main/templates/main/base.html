@@ -63,13 +63,13 @@ a{
                 <li class="nav-item">☆</li>
                 <li class="nav-item">★</li>
             <ul class="navbar-nav fontcolor--white" style="margin-left:20px;">
-                <c:if test="${member == null}">
-                <li class="nav-item" onclick="location.href='/login'">Login</li>
-                <li class="nav-item" style="margin-left:20px;" onclick="location.href='/signUp'">Sign Up</li>
-                </c:if>
-                <c:if test="${member != null}">
-                <li class="nav-item" onclick="location.href='/logout'">Logout</li>    
-                </c:if>
+                {% if request.session.account_name == None %}
+                <li class="nav-item" onclick="location.href='{% url 'account:login' %}'">Login</li>
+                <li class="nav-item" style="margin-left:20px;" onclick="location.href='{% url 'account:sign_up' %}'">Sign Up</li>
+                {% endif %}
+                {% if request.session.account_name %}
+                <li class="nav-item" onclick="location.href='{% url 'account:logout' %}'">Logout</li>    
+                {% endif %}
             </ul>
         </div>
     </div>
