@@ -15,139 +15,33 @@ def export_csv_movie_list(request):
     sort = request.GET.get('sort')
     title = request.GET.get('title')
 
-    if genre == None or genre == '':
-        if timeFrame == None or timeFrame == '':
-            if sort == None or sort == '':
-                if title == None:
-                    return Movie.objects.filter().order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter().order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter().order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter().order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(title__icontains=title).order_by('-average_score')
+    movies = Movie.objects    
 
-        elif timeFrame == 'last90days':
-            if sort == None or sort =='':
-                if title == None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-average_score')
-
+    # filter
+    if genre != None and genre != '':
+        movies = movies.filter(genre=genre)
+    
+    if timeFrame != None and timeFrame != '':
+        if timeFrame == 'last90days':
+            movies = movies.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90))
         else:
-            if sort == None or sort == '':
-                if title == None:
-                    return Movie.objects.filter(release_date__year=timeFrame).order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter(release_date__year=timeFrame).order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter(release_date__year=timeFrame).order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter(release_date__year=timeFrame).order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-average_score')
+            movies = movies.filter(release_date__year=timeFrame)
 
-    else:
-        if timeFrame == None or timeFrame == '':
-            if sort == None or sort == '':
-                if title == None:
-                    return Movie.objects.filter(genre=genre).order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter(genre=genre).order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter(genre=genre).order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter(genre=genre).order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-average_score')
+    if title != None and title != '':
+        movies = movies.filter(title__icontains=title)
 
-        elif timeFrame == 'last90days':
-            if sort == None or sort == '':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-average_score')
+    # sort
+    if sort == None or sort == '':
+        movies = movies.order_by('-release_date')
+    elif sort == 'A_Z':
+        movies = movies.order_by('title')
+    elif sort == 'Z_A':
+        movies = movies.order_by('-title')
+    elif sort == 'Score':
+        movies = movies.order_by('-average_score')
 
-        else:
-            if sort == None or sort == '':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-release_date')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-release_date')
-            elif sort == 'A_Z':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('title')
-            elif sort == 'Z_A':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-title')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-title')
-            elif sort == 'Score':
-                if title == None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-average_score')
-                elif title != None:
-                    return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-average_score')
+
+    return movies
 
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
@@ -155,7 +49,14 @@ def export_csv(request):
     
     writer = csv.writer(response)
 
-    writer.writerow(export_csv_movie_list(request).values())
+    fields = Movie._meta.fields
+    writer.writerow(field.column for field in fields)
+    for movie in export_csv_movie_list(request):
+        writer.writerow(x.value_from_object(movie) for x in fields)
+
+    # xx = []
+    # for x in fileds:
+    #     xx.append x.value_from_object(movie)
 
     return response
 
@@ -169,139 +70,33 @@ class MovieListView(generic.ListView):
         sort = self.request.GET.get('sort')
         title = self.request.GET.get('title')
 
-        if genre == None or genre == '':
-            if timeFrame == None or timeFrame == '':
-                if sort == None or sort == '':
-                    if title == None:
-                        return Movie.objects.filter().order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter().order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter().order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter().order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(title__icontains=title).order_by('-average_score')
+        movies = Movie.objects    
 
-            elif timeFrame == 'last90days':
-                if sort == None or sort =='':
-                    if title == None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-average_score')
-
+        # filter
+        if genre != None and genre != '':
+            movies = movies.filter(genre=genre)
+        
+        if timeFrame != None and timeFrame != '':
+            if timeFrame == 'last90days':
+                movies = movies.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90))
             else:
-                if sort == None or sort == '':
-                    if title == None:
-                        return Movie.objects.filter(release_date__year=timeFrame).order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter(release_date__year=timeFrame).order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter(release_date__year=timeFrame).order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter(release_date__year=timeFrame).order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(release_date__year=timeFrame, title__icontains=title).order_by('-average_score')
+                movies = movies.filter(release_date__year=timeFrame)
 
-        else:
-            if timeFrame == None or timeFrame == '':
-                if sort == None or sort == '':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre).order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre).order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre).order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre).order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, title__icontains=title).order_by('-average_score')
+        if title != None and title != '':
+            movies = movies.filter(title__icontains=title)
 
-            elif timeFrame == 'last90days':
-                if sort == None or sort == '':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90)).order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90), title__icontains=title).order_by('-average_score')
+        # sort
+        if sort == None or sort == '':
+            movies = movies.order_by('-release_date')
+        elif sort == 'A_Z':
+            movies = movies.order_by('title')
+        elif sort == 'Z_A':
+            movies = movies.order_by('-title')
+        elif sort == 'Score':
+            movies = movies.order_by('-average_score')
 
-            else:
-                if sort == None or sort == '':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-release_date')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-release_date')
-                elif sort == 'A_Z':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('title')
-                elif sort == 'Z_A':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-title')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-title')
-                elif sort == 'Score':
-                    if title == None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame).order_by('-average_score')
-                    elif title != None:
-                        return Movie.objects.filter(genre=genre, release_date__year=timeFrame, title__icontains=title).order_by('-average_score')    
+
+        return movies
 
     def get_queryset(self):
         return None
@@ -351,7 +146,9 @@ class MovieListView(generic.ListView):
         context['genre'] = self.request.GET.get('genre')
         context['timeFrame'] = self.request.GET.get('timeFrame')
         context['sort'] = self.request.GET.get('sort')
-        context['title'] = self.request.GET.get('title')
+        title = self.request.GET.get('title')
+        if title != None and title != '':
+            context['title'] = title
 
         return context
 
