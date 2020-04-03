@@ -1,3 +1,3 @@
-from movie.models import Movie
+from movie.models import MovieTest
 
-Movie.objects.all().delete()
+MovieTest.objects.all().delete()
