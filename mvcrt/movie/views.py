@@ -11,35 +11,11 @@ from .models import Movie
 
 def export_csv_movie_list(request):
     genre = request.GET.get('genre')
-    timeFrame = request.GET.get('timeFrame')
+    time_frame = request.GET.get('timeFrame')
     sort = request.GET.get('sort')
     title = request.GET.get('title')
 
-    movies = Movie.objects    
-
-    # filter
-    if genre != None and genre != '':
-        movies = movies.filter(genre=genre)
-    
-    if timeFrame != None and timeFrame != '':
-        if timeFrame == 'last90days':
-            movies = movies.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90))
-        else:
-            movies = movies.filter(release_date__year=timeFrame)
-
-    if title != None and title != '':
-        movies = movies.filter(title__icontains=title)
-
-    # sort
-    if sort == None or sort == '':
-        movies = movies.order_by('-release_date')
-    elif sort == 'A_Z':
-        movies = movies.order_by('title')
-    elif sort == 'Z_A':
-        movies = movies.order_by('-title')
-    elif sort == 'Score':
-        movies = movies.order_by('-average_score')
-
+    movies = Movie.movie_filter(genre, time_frame, sort, title)
 
     return movies
 
@@ -66,37 +42,15 @@ class MovieListView(generic.ListView):
 
     def get_movie_list(self):
         genre = self.request.GET.get('genre')
-        timeFrame = self.request.GET.get('timeFrame')
+        time_frame = self.request.GET.get('timeFrame')
         sort = self.request.GET.get('sort')
         title = self.request.GET.get('title')
 
-        movies = Movie.objects    
-
-        # filter
-        if genre != None and genre != '':
-            movies = movies.filter(genre=genre)
-        
-        if timeFrame != None and timeFrame != '':
-            if timeFrame == 'last90days':
-                movies = movies.filter(release_date__lte=datetime.date.today(), release_date__gt=datetime.date.today()-datetime.timedelta(days=90))
-            else:
-                movies = movies.filter(release_date__year=timeFrame)
-
-        if title != None and title != '':
-            movies = movies.filter(title__icontains=title)
-
-        # sort
-        if sort == None or sort == '':
-            movies = movies.order_by('-release_date')
-        elif sort == 'A_Z':
-            movies = movies.order_by('title')
-        elif sort == 'Z_A':
-            movies = movies.order_by('-title')
-        elif sort == 'Score':
-            movies = movies.order_by('-average_score')
-
+        movies = Movie.movie_filter(genre, time_frame, sort, title)
 
         return movies
+
+
 
     def get_queryset(self):
         return None
